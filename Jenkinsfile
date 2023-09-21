@@ -6,6 +6,7 @@ pipeline {
         awsecrcreds = 'ecr:us-east-2:JenkinsAWSCLI'
         awsecrregistry = "392102158411.dkr.ecr.us-east-2.amazonaws.com/app-image"
         imageregurl = "https://392102158411.dkr.ecr.us-east-2.amazonaws.com"
+        awsregion = "us-east-2"
     }
     tools {
         maven "MAVEN3"
@@ -22,8 +23,47 @@ pipeline {
         stage ("Fetch Code") {
             steps {
                 script {
-                    echo "Fetching code from GitHub"
                     gv.fetchcode()
+                }
+            }
+        }
+        stage ('Build') {
+            steps {
+                script {
+                    gv.buildcode()
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
+        }
+        stage ('Build Image') {
+            steps {
+                script {
+                    gv.buildimage()
+                }
+            }
+        }
+        stage ('Push Image to ECR') {
+            steps {
+                script {
+                    gv.pushimage()
+                }
+            }
+        }
+        stage ('provision eks cluster') {
+            steps {
+                script {
+                    gv.provisionekscluster()
+                }
+            }
+        }
+        stage ('connect to eks cluster') {
+            steps {
+                script {
+                    gv.connecteks()
                 }
             }
         }
