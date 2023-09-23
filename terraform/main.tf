@@ -9,9 +9,9 @@ provider "kubernetes" {
 
 terraform {
   backend "s3" {
-    bucket = "tf-state-backed"
-    key = "state/terraform.tfstate"
-    region = "us-east-2"
+    bucket      = "backend-terra-buk"
+    key       = "state/terraform.tfstate"
+    region      = "us-east-2"
   }
 }
 
