@@ -24,7 +24,7 @@ def pushImage() {
 def provisionEksCluster() {
     withAWS(credentials: 'JenkinsAWSCLI', region: 'us-east-2') {
         dir('terraform') {
-            sh 'terraform init'
+            sh 'terraform init -reconfigure'
             sh 'terraform apply --auto-approve'
             EKS_CLUSTER_NAME = sh(
                 script: "terraform output cluster_name",
