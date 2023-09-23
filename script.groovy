@@ -22,7 +22,7 @@ def pushImage() {
 }
 
 def provisionEksCluster() {
-    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsRegion}") {
+    withAWS(credentials: 'JenkinsAWSCLI', region: 'us-east-2') {
         dir('terraform') {
             sh 'terraform init'
             sh 'terraform apply --auto-approve'
@@ -36,7 +36,7 @@ def provisionEksCluster() {
 
 def connectEks() {
     echo "${EKS_CLUSTER_NAME}"
-    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsRegion}") {
+    withAWS(credentials: 'JenkinsAWSCLI', region: 'us-east-2') {
         sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${awsRegion}"
         sh 'kubectl get nodes'
         sh 'kubectl apply -f app.yaml'
