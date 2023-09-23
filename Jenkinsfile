@@ -20,7 +20,7 @@ pipeline {
                 }
             }
         }
-        stage ("Fetch Code") {
+        stage ('Fetch Code') {
             steps {
                 script {
                     gv.fetchcode()
