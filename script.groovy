@@ -1,28 +1,28 @@
-def fetchcode() {
+def fetchCode() {
     echo "Pull Source code from GitHub"
     git branch: 'main', url: 'https://github.com/seunayolu/jenkins-terra-eks.git'
 }
 
-def buildcode() {
+def buildCode() {
     echo "Build App with Maven"
     sh 'mvn clean install -DskipTests'
 }
 
-def buildimage() {
+def buildImage() {
     echo "Build app with docker"
-    dockerImage = docker.build(awsecrregistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+    dockerImage = docker.build(awsEcrRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
 }
 
-def pushimage() {
+def pushImage() {
     echo "Push Docker Image to ECR"
-    docker.withRegistry (imageregurl, awsecrcreds) {
+    docker.withRegistry (imageRegUrl, awsEcrCreds) {
         dockerImage.push ("$BUILD_NUMBER")
         dockerImage.push ('latest')
     }
 }
 
-def provisionekscluster() {
-    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsregion}") {
+def provisionEksCluster() {
+    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsRegion}") {
         dir('terraform') {
             sh 'terraform init'
             sh 'terraform apply --auto-approve'
@@ -34,10 +34,10 @@ def provisionekscluster() {
     }
 }
 
-def connecteks() {
+def connectEks() {
     echo "${EKS_CLUSTER_NAME}"
-    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsregion}") {
-        sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${awsregion}"
+    withAWS(credentails: 'JenkinsAWSCLI', region: "${awsRegion}") {
+        sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${awsRegion}"
         sh 'kubectl get nodes'
         sh 'kubectl apply -f app.yaml'
     }

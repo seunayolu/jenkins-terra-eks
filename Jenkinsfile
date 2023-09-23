@@ -3,10 +3,10 @@ def gv
 pipeline {
     agent any
     environment {
-        awsecrcreds = 'ecr:us-east-2:JenkinsAWSCLI'
-        awsecrregistry = "392102158411.dkr.ecr.us-east-2.amazonaws.com/app-image"
-        imageregurl = "https://392102158411.dkr.ecr.us-east-2.amazonaws.com"
-        awsregion = "us-east-2"
+        awsEcrCreds = 'ecr:us-east-2:JenkinsAWSCLI'
+        awsEcrRegistry = "392102158411.dkr.ecr.us-east-2.amazonaws.com/app-image"
+        imageRegUrl = "https://392102158411.dkr.ecr.us-east-2.amazonaws.com"
+        awsRegion = "us-east-2"
     }
     tools {
         maven "MAVEN3"
@@ -20,17 +20,17 @@ pipeline {
                 }
             }
         }
-        stage ('Fetch Code') {
+        stage ("Fetch Code") {
             steps {
                 script {
-                    gv.fetchcode()
+                    gv.fetchCode()
                 }
             }
         }
         stage ('Build') {
             steps {
                 script {
-                    gv.buildcode()
+                    gv.buildCode()
                 }
             }
             post {
@@ -42,28 +42,28 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
-                    gv.buildimage()
+                    gv.buildImage()
                 }
             }
         }
         stage ('Push Image to ECR') {
             steps {
                 script {
-                    gv.pushimage()
+                    gv.pushImage()
                 }
             }
         }
         stage ('provision eks cluster') {
             steps {
                 script {
-                    gv.provisionekscluster()
+                    gv.provisionEksCluster()
                 }
             }
         }
         stage ('connect to eks cluster') {
             steps {
                 script {
-                    gv.connecteks()
+                    gv.connectEks()
                 }
             }
         }
