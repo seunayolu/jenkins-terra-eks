@@ -1,7 +1,7 @@
 FROM openjdk:11 AS BUILD_IMAGE
 RUN apt update && apt install maven -y
 RUN git clone https://github.com/seunayolu/jenkins-terra-eks.git
-RUN mvn clean install
+RUN cd jenkins-terra-eks && mvn clean install
 
 FROM tomcat:9-jre11
 
